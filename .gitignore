@@ -1,0 +1,26 @@
+# Distribution / packaging
+.Python
+*.pyc
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+app/node_modules/*
+app/node_modules/
+# Serverless directories
+.serverless
+.idea
+app/.env
+app/.dynamodb
+app/src/database/shared-local-instance.db

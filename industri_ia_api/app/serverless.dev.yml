@@ -1,0 +1,26 @@
+service: ${file(serverless.yml):service}
+frameworkVersion: ${file(serverless.yml):frameworkVersion}
+useDotenv: ${file(serverless.yml):useDotenv}
+plugins:
+  - serverless-dynamodb
+  - serverless-offline
+provider:
+  name: ${file(serverless.yml):provider.name}
+  runtime: ${file(serverless.yml):provider.runtime}
+  region: ${file(serverless.yml):provider.region}
+  memorySize: ${file(serverless.yml):provider.memorySize}
+  timeout: ${file(serverless.yml):provider.timeout}
+  environment: ${file(serverless.yml):provider.environment}
+resources: ${file(serverless.yml):resources}
+
+custom:
+  serverless-dynamodb:
+    start:
+      port: 8000
+      docker: false
+      inMemory: false
+      dbPath: src/database
+      migrate: true
+      optimizeDbBeforeStartup: false
+
+functions: ${file(serverless.yml):functions}

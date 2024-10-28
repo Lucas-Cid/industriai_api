@@ -1,0 +1,89 @@
+service: industri-ai
+frameworkVersion: '3'
+useDotenv: true
+plugins:
+  - serverless-python-requirements
+provider:
+  name: aws
+  runtime: python3.8
+  region: ${env:AWS_REGION}
+  memorySize: 512
+  timeout: 30
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:BatchWriteItem
+            - dynamodb:BatchGetItem
+            - dynamodb:DescribeTable
+            - dynamodb:UpdateTable
+          Resource:
+            - arn:aws:dynamodb:${env:AWS_REGION}:*:table/*
+        - Effect: Allow
+          Action:
+            - sqs:GetQueueUrl
+            - sqs:SendMessage
+          Resource:
+            - arn:aws:sqs:${env:AWS_REGION}:*:*
+  environment:
+    ENVIRONMENT: ${opt:stage, 'dev'}
+    AWS_SERVICE_DB_URL: ${env:AWS_DB_URL, 'https://dynamodb.${env:AWS_REGION}.amazonaws.com'}
+    OPENAI_API_KEY: ${env:OPENAI_API_KEY}
+#    AWS_SERVICE_SQS_URL: ${env:AWS_SQS_URL, 'https://sqs.${env:AWS_REGION}.amazonaws.com'}
+
+package:
+  patterns:
+    - '!node_modules/**'
+    - '!package-lock.json'
+    - '!package.json'
+    - '!src/database/shared-local-instance.db'
+    - '!.dynamodb/**'
+    - '!.serverless/**'
+    - '!.env'
+
+custom:
+  pythonRequirements:
+    layer: true
+    fileName: requirements.txt
+    dockerizePip: true
+
+resources:
+  Resources:
+    pairingRequest:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: indServiceOrder
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+functions:
+  create-service-order:
+    handler: handler.create_service_order_lambda
+    events:
+      - http:
+          path: /service_order
+          method: post
+  get-service-orders:
+    handler: handler.get_service_order_lambda
+    events:
+      - http:
+          path: /service_order
+          method: get
+  update-service-orders:
+    handler: handler.update_service_order_lambda
+    events:
+      - http:
+          path: /service_order/{id}
+          method: put

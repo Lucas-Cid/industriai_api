@@ -1,0 +1,8 @@
+[submodule "mently_service_order_api"]
+	path = mently_service_order_api
+	url = https://github.com/Lucas-Cid/mently_service_order_api.git
+	branch = main
+[submodule "mently_profile_api"]
+	path = mently_profile_api
+	url = https://github.com/Lucas-Cid/mently_profile_api.git
+	branch = main

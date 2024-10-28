@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx_proxy_ia
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - industri_ia_api
+
+  elasticmq:
+    image: softwaremill/elasticmq
+    ports:
+      - "9324:9324"
+
+  industri_ia_api:
+    build:
+      context: industri_ia_api/
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./industri_ia_api/app:/app
+    env_file:
+      - industri_ia_api/app/.env.local
+    stdin_open: true
+    tty: true
+    depends_on:
+      - elasticmq
