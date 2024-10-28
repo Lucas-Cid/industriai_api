@@ -17,7 +17,7 @@ class ServiceOrderComplementor:
             "{\n"
             "    \"orders\": [{\n"
             "        \"machine\": \"nome da maquina\",\n"
-            "        \"production line\": \"linha de produção\",\n"
+            "        \"production_line\": \"linha de produção\",\n"
             "        \"maintenance\": [\n"
             "            {\"procedure\": \"nome do procedimento necessário para manutencao\"}\n"
             "        ]\n"
@@ -44,7 +44,7 @@ class ServiceOrderComplementor:
             # Tenta converter a resposta em JSON
             ordem_servico = json.loads(chatgpt_response)
 
-            return ordem_servico
+            return ordem_servico.get('orders')
 
         except Exception as e:
             # Lida com erros, como problemas de parsing

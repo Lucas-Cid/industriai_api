@@ -15,7 +15,7 @@ class ServiceOrderProcessor:
             "{\n"
             "    \"orders\": [{\n"
             "        \"machine\": \"nome da maquina\",\n"
-            "        \"production line\": \"linha de produção\",\n"
+            "        \"production_line\": \"linha de produção\",\n"
             "        \"maintenance\": [\n"
             "            {\"procedure\": \"nome do procedimento necessário para manutencao\"}\n"
             "        ]\n"
